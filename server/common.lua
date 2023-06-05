@@ -43,7 +43,7 @@ end
 MySQL.ready(function()
   if not Config.OxInventory then
     local items = MySQL.query.await('SELECT * FROM items')
-    for k, v in ipairs(items) do
+    for _, v in ipairs(items) do
       ESX.Items[v.name] = {label = v.label, weight = v.weight, rare = v.rare, canRemove = v.can_remove}
     end
   else
