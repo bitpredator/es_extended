@@ -133,9 +133,9 @@ function loadESXPlayer(identifier, playerId, isNew)
     end
     local index = #userData.accounts + 1
     userData.accounts[index] = {
-      name = account, 
+      name = account,
       money = foundAccounts[account] or Config.StartingAccountMoney[account] or 0,
-      label = data.label, 
+      label = data.label,
       round = data.round,
       index = index
     }
@@ -299,13 +299,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 
   xPlayer.triggerEvent('esx:playerLoaded',
     {
-      accounts = xPlayer.getAccounts(), 
-      coords = xPlayer.getCoords(), 
-      identifier = xPlayer.getIdentifier(), 
+      accounts = xPlayer.getAccounts(),
+      coords = xPlayer.getCoords(),
+      identifier = xPlayer.getIdentifier(),
       inventory = xPlayer.getInventory(),
-      job = xPlayer.getJob(), 
-      loadout = xPlayer.getLoadout(), 
-      maxWeight = xPlayer.getMaxWeight(), 
+      job = xPlayer.getJob(),
+      loadout = xPlayer.getLoadout(),
+      maxWeight = xPlayer.getMaxWeight(),
       money = xPlayer.getMoney(),
       sex = xPlayer.get("sex") or "m",
       dead = false
@@ -620,4 +620,3 @@ end)
 AddEventHandler('txAdmin:events:serverShuttingDown', function()
   Core.SavePlayers()
 end)
-
