@@ -39,11 +39,10 @@ end
 function ESX.GetWeaponLabel(weaponName)
 	weaponName = string.upper(weaponName)
 
-	for _,v in ipairs(Config.Weapons) do
-		if v.name == weaponName then
-			return v.label
-		end
-	end
+	assert(weaponsByName[weaponName], "Invalid weapon name!")
+
+	local index = weaponsByName[weaponName]
+	return Config.Weapons[index].label or ""
 end
 
 function ESX.GetWeaponComponent(weaponName, weaponComponent)
