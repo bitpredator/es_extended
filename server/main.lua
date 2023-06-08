@@ -419,7 +419,7 @@ if not Config.OxInventory then
             targetXPlayer.setWeaponTint(itemName, weaponTint)
           end
           if weaponComponents then
-            for k, v in pairs(weaponComponents) do
+            for _, v in pairs(weaponComponents) do
               targetXPlayer.addWeaponComponent(itemName, v)
             end
           end
@@ -559,7 +559,7 @@ if not Config.OxInventory then
           xPlayer.addWeapon(pickup.name, pickup.count)
           xPlayer.setWeaponTint(pickup.name, pickup.tintIndex)
 
-          for k, v in ipairs(pickup.components) do
+          for _, v in ipairs(pickup.components) do
             xPlayer.addWeaponComponent(pickup.name, v)
           end
         end
