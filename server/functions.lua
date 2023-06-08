@@ -179,10 +179,10 @@ function Core.SavePlayer(xPlayer, cb)
   local parameters <const> = {
     json.encode(xPlayer.getAccounts(true)),
     xPlayer.job.name,
-    xPlayer.job.grade, 
+    xPlayer.job.grade,
     xPlayer.group,
     json.encode(xPlayer.getCoords()),
-    json.encode(xPlayer.getInventory(true)), 
+    json.encode(xPlayer.getInventory(true)),
     json.encode(xPlayer.getLoadout(true)),
     xPlayer.identifier
   }
@@ -224,7 +224,7 @@ function Core.SavePlayers(cb)
 
   MySQL.prepare(
     "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?",
-    parameters, 
+    parameters,
     function(results)
       if not results then
         return
@@ -267,7 +267,7 @@ function ESX.GetPlayerFromIdentifier(identifier)
 end
 
 function ESX.GetIdentifier(playerId)
-  local fxDk = GetConvarInt('sv_fxdkMode', 0) 
+  local fxDk = GetConvarInt('sv_fxdkMode', 0)
   if fxDk == 1 then
     return "ESX-DEBUG-LICENCE"
   end

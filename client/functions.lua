@@ -92,7 +92,7 @@ function ESX.ShowNotification(message, type, length)
 function ESX.TextUI(message, type)
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:TextUI(message, type)
-    else 
+    else
         print("[^1ERROR^7] ^5BPT TextUI^7 is Missing!")
         return
     end
@@ -101,7 +101,7 @@ end
 function ESX.HideUI()
     if GetResourceState("esx_textui") ~= "missing" then
         exports["esx_textui"]:HideUI()
-    else 
+    else
         print("[^1ERROR^7] ^5BPT TextUI^7 is Missing!")
         return
     end
@@ -615,7 +615,7 @@ function ESX.Game.GetVehicleProperties(vehicle)
 
         local customXenonColorR, customXenonColorG, customXenonColorB = GetVehicleXenonLightsCustomColor(vehicle)
         local customXenonColor = nil
-        if customXenonColorR and customXenonColorG and customXenonColorB then 
+        if customXenonColorR and customXenonColorG and customXenonColorB then
             customXenonColor = {customXenonColorR, customXenonColorG, customXenonColorB}
         end
         
