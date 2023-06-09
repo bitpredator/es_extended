@@ -1,6 +1,7 @@
 SetMapName('San Andreas')
 SetGameType('BPT FRAMEWORK')
 
+local oneSyncState = GetConvar('onesync', 'off')
 local newPlayer = 'INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?'
 local loadPlayer = 'SELECT `accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`, `loadout`'
 
@@ -577,7 +578,7 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
   local xPlayer = ESX.GetPlayerFromId(source)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
+    loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
 end)
 
 ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
@@ -588,23 +589,23 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
   local xPlayer = ESX.GetPlayerFromId(target)
 
   cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-      loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
+    loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
-  players[source] = nil
+	players[source] = nil
 
-  for playerId, v in pairs(players) do
-    local xPlayer = ESX.GetPlayerFromId(playerId)
+	for playerId, v in pairs(players) do
+		local xPlayer = ESX.GetPlayerFromId(playerId)
 
-    if xPlayer then
-      players[playerId] = xPlayer.getName()
-    else
-      players[playerId] = nil
-    end
-  end
+		if xPlayer then
+			players[playerId] = xPlayer.getName()
+		else
+			players[playerId] = nil
+		end
+	end
 
-  cb(players)
+	cb(players)
 end)
 
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
