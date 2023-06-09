@@ -139,7 +139,7 @@ end, true, {help = _U('command_clearall')})
 
 if not Config.OxInventory then
 	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
-		for k,v in ipairs(args.playerId.inventory) do
+		for _,v in ipairs(args.playerId.inventory) do
 			if v.count > 0 then
 				args.playerId.setInventoryItem(v.name, 0)
 			end
