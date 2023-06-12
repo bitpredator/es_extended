@@ -119,12 +119,12 @@ end
 ---@param seat number
 ---@param cb function
 function ESX.OneSync.SpawnPedInVehicle(model, vehicle, seat, cb)
-	if type(model) == 'string' then model = joaat(model) end
-	CreateThread(function()
-		local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
-		while not DoesEntityExist(entity) do Wait(50) end
-		return entity
-	end)
+    if type(model) == 'string' then model = joaat(model) end
+    CreateThread(function()
+        local entity = CreatePedInsideVehicle(vehicle, 1, model, seat, true, true)
+        while not DoesEntityExist(entity) do Wait(50) end
+        cb(NetworkGetNetworkIdFromEntity(entity))
+    end)
 end
 
 local function getNearbyEntities(entities, coords, modelFilter, maxDistance, isPed)
@@ -164,8 +164,8 @@ end
 ---@param maxDistance number
 ---@param modelFilter table models to ignore, where the key is the model hash and the value is true
 ---@return table
-function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter, cb)
-	return getNearbyEntities(GetAllVehicles(), coords, modelFilter, maxDistance)
+function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter)
+    return getNearbyEntities(GetAllVehicles(), coords, modelFilter, maxDistance)
 end
 
 local function getClosestEntity(entities, coords, modelFilter, isPed)
