@@ -169,21 +169,21 @@ function ESX.OneSync.GetVehiclesInArea(coords, maxDistance, modelFilter, cb)
 end
 
 local function getClosestEntity(entities, coords, modelFilter, isPed)
-	local distance, closestEntity, closestCoords = maxDistance or 100, nil, nil
-	coords = type(coords) == 'number' and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z)
+    local distance, closestEntity, closestCoords = 100, nil, nil
+    coords = type(coords) == 'number' and GetEntityCoords(GetPlayerPed(coords)) or vector3(coords.x, coords.y, coords.z)
 
-	for _, entity in pairs(entities) do
-		if not isPed or (isPed and not IsPedAPlayer(entity)) then
-			if not modelFilter or modelFilter[GetEntityModel(entity)] then
-				local entityCoords = GetEntityCoords(entity)
-				local dist = #(coords - entityCoords)
-				if dist < distance then
-					closestEntity, distance, closestCoords = entity, dist, entityCoords
-				end
-			end
-		end
-	end
-	return NetworkGetNetworkIdFromEntity(closestEntity), distance, closestCoords
+    for _, entity in pairs(entities) do
+        if not isPed or (isPed and not IsPedAPlayer(entity)) then
+            if not modelFilter or modelFilter[GetEntityModel(entity)] then
+                local entityCoords = GetEntityCoords(entity)
+                local dist = #(coords - entityCoords)
+                if dist < distance then
+                    closestEntity, distance, closestCoords = entity, dist, entityCoords
+                end
+            end
+        end
+    end
+    return NetworkGetNetworkIdFromEntity(closestEntity), distance, closestCoords
 end
 
 ---@param coords vector3
