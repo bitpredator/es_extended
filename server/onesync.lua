@@ -207,6 +207,6 @@ function ESX.OneSync.GetClosestVehicle(coords, modelFilter)
 	return getClosestEntity(GetAllVehicles(), coords, modelFilter)
 end
 
-ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(source, cb, model, coords, heading)
-	ESX.OneSync.SpawnObject(model, coords, heading, cb)
+ESX.RegisterServerCallback("esx:Onesync:SpawnObject", function(_, cb, model, coords, heading)
+    ESX.OneSync.SpawnObject(model, coords, heading, cb)
 end)
