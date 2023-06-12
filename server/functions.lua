@@ -73,9 +73,9 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                         local newArg = tonumber(args[k])
 
                         if newArg then
-                            newArgs[v.name] = newArg
+                          newArgs[v.name] = newArg
                         else
-                            error = _U('commanderror_argumentmismatch_number', k)
+                          error = _U('commanderror_argumentmismatch_number', k)
                         end
                     elseif v.type == 'player' or v.type == 'playerId' then
                         local targetPlayer = tonumber(args[k])
@@ -85,36 +85,36 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                         end
 
                         if targetPlayer then
-                            local xTargetPlayer = ESX.GetPlayerFromId(targetPlayer)
+                          local xTargetPlayer = ESX.GetPlayerFromId(targetPlayer)
 
                             if xTargetPlayer then
-                                if v.type == 'player' then
-                                    newArgs[v.name] = xTargetPlayer
-                                else
-                                    newArgs[v.name] = targetPlayer
-                                end
+                              if v.type == 'player' then
+                                newArgs[v.name] = xTargetPlayer
+                              else
+                                newArgs[v.name] = targetPlayer
+                              end
                             else
-                                error = _U('commanderror_invalidplayerid')
+                              error = _U('commanderror_invalidplayerid')
                             end
                         else
-                            error = _U('commanderror_argumentmismatch_number', k)
+                          error = _U('commanderror_argumentmismatch_number', k)
                         end
                     elseif v.type == 'string' then
                         newArgs[v.name] = args[k]
                     elseif v.type == 'item' then
                         if ESX.Items[args[k]] then
-                            newArgs[v.name] = args[k]
+                          newArgs[v.name] = args[k]
                         else
-                            error = _U('commanderror_invaliditem')
+                          error = _U('commanderror_invaliditem')
                         end
                     elseif v.type == 'weapon' then
                         if ESX.GetWeapon(args[k]) then
-                            newArgs[v.name] = string.upper(args[k])
+                          newArgs[v.name] = string.upper(args[k])
                         else
-                            error = _U('commanderror_invalidweapon')
+                          error = _U('commanderror_invalidweapon')
                         end
                     elseif v.type == 'any' then
-                        newArgs[v.name] = args[k]
+                      newArgs[v.name] = args[k]
                     end
                 end
 
@@ -123,7 +123,7 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
                 end
 
                 if error then
-                    break
+                  break
                 end
             end
 
@@ -133,16 +133,16 @@ function ESX.RegisterCommand(name, group, cb, allowConsole, suggestion)
 
     if error then
         if playerId == 0 then
-            print(('[^3WARNING^7] %s^7'):format(error))
+          print(('[^3WARNING^7] %s^7'):format(error))
         else
-            xPlayer.showNotification(error)
+          xPlayer.showNotification(error)
         end
     else
         cb(xPlayer or false, args, function(msg)
             if playerId == 0 then
-                print(('[^3WARNING^7] %s^7'):format(msg))
+              print(('[^3WARNING^7] %s^7'):format(msg))
             else
-                xPlayer.showNotification(msg)
+              xPlayer.showNotification(msg)
             end
         end)
     end
@@ -167,7 +167,7 @@ function ESX.RegisterServerCallback(name, cb)
   Core.ServerCallbacks[name] = cb
 end
 
-function ESX.TriggerServerCallback(name, requestId, source,Invoke, cb, ...)
+function ESX.TriggerServerCallback(name, _, source,Invoke, cb, ...)
   if Core.ServerCallbacks[name] then
     Core.ServerCallbacks[name](source, cb, ...)
   else
