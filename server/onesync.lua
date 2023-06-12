@@ -106,12 +106,12 @@ end
 ---@param heading number
 ---@param cb function
 function ESX.OneSync.SpawnPed(model, coords, heading, cb)
-	if type(model) == 'string' then model = joaat(model) end
-	CreateThread(function()
-		local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
-		while not DoesEntityExist(entity) do Wait(50) end
-		return entity
-	end)
+    if type(model) == 'string' then model = joaat(model) end
+    CreateThread(function()
+        local entity = CreatePed(0, model, coords.x, coords.y, coords.z, heading, true, true)
+        while not DoesEntityExist(entity) do Wait(50) end
+        cb(NetworkGetNetworkIdFromEntity(entity))
+    end)
 end
 
 ---@param model number|string
