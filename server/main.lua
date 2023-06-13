@@ -584,11 +584,19 @@ ESX.RegisterServerCallback('esx:isUserAdmin', function(source, cb)
   cb(Core.IsPlayerAdmin(source))
 end)
 
-ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target)
+ESX.RegisterServerCallback('esx:getOtherPlayerData', function(_, cb, target)
   local xPlayer = ESX.GetPlayerFromId(target)
 
-  cb({identifier = xPlayer.identifier, accounts = xPlayer.getAccounts(), inventory = xPlayer.getInventory(), job = xPlayer.getJob(),
-    loadout = xPlayer.getLoadout(), money = xPlayer.getMoney(), position = xPlayer.getCoords(true)})
+  cb({
+    identifier = xPlayer.identifier,
+    accounts = xPlayer.getAccounts(),
+    inventory = xPlayer.getInventory(),
+    job = xPlayer.getJob(),
+    loadout = xPlayer.getLoadout(),
+    money = xPlayer.getMoney(),
+    position = xPlayer.getCoords(true),
+    metadata = xPlayer.getMetadata()
+  })
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
