@@ -72,6 +72,8 @@ function createESXPlayer(identifier, playerId, data)
     accounts[account] = money
   end
 
+  local defaultGroup = Core.GetPlayerAdminGroup(playerId)
+
   if Core.IsPlayerAdmin(playerId) then
     print(('[^2INFO^0] Player ^5%s^0 Has been granted admin permissions via ^5Ace Perms^7.'):format(playerId))
     defaultGroup = "admin"
@@ -91,7 +93,7 @@ function createESXPlayer(identifier, playerId, data)
 end
 
 if not Config.Multichar then
-  AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
+  AddEventHandler('playerConnecting', function(_, _, deferrals)
     deferrals.defer()
     local playerId = source
     local identifier = ESX.GetIdentifier(playerId)
@@ -115,7 +117,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   local userData = {accounts = {}, inventory = {}, job = {}, loadout = {}, playerName = GetPlayerName(playerId), weight = 0}
 
   local result = MySQL.prepare.await(loadPlayer, {identifier})
-  local job, grade, jobObject, gradeObject = result.job, tostring(result.job_grade)
+  local job, grade, duty = result.job, tostring(result.job_grade), result.job_duty and (result.job_duty == 1 and true or result.job_duty == 0 and false)
   local foundAccounts, foundItems = {}, {}
 
   -- Accounts
@@ -321,7 +323,7 @@ function loadESXPlayer(identifier, playerId, isNew)
   print(('[^2INFO^0] Player ^5"%s"^0 has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 end
 
-AddEventHandler('chatMessage', function(playerId, author, message)
+AddEventHandler('chatMessage', function(playerId, _, message)
   local xPlayer = ESX.GetPlayerFromId(playerId)
   if message:sub(1, 1) == '/' and playerId > 0 then
     CancelEvent()
@@ -441,7 +443,7 @@ if not Config.OxInventory then
       end
     elseif type == 'item_ammo' then
       if sourceXPlayer.hasWeapon(itemName) then
-        local weaponNum, weapon = sourceXPlayer.getWeapon(itemName)
+        local _, weapon = sourceXPlayer.getWeapon(itemName)
 
         if targetXPlayer.hasWeapon(itemName) then
           local _, weaponObject = ESX.GetWeapon(itemName)
