@@ -592,19 +592,19 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 end)
 
 ESX.RegisterServerCallback('esx:getPlayerNames', function(source, cb, players)
-	players[source] = nil
+  players[source] = nil
 
-	for playerId, v in pairs(players) do
-		local xPlayer = ESX.GetPlayerFromId(playerId)
+  for playerId in pairs(players) do
+    local xPlayer = ESX.GetPlayerFromId(playerId)
 
-		if xPlayer then
-			players[playerId] = xPlayer.getName()
-		else
-			players[playerId] = nil
-		end
-	end
+      if xPlayer then
+        players[playerId] = xPlayer.getName()
+      else
+        players[playerId] = nil
+      end
+  end
 
-	cb(players)
+  cb(players)
 end)
 
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
