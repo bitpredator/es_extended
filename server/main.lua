@@ -506,7 +506,7 @@ if not Config.OxInventory then
       if xPlayer.hasWeapon(itemName) then
         local _, weapon = xPlayer.getWeapon(itemName)
         local _, weaponObject = ESX.GetWeapon(itemName)
-        local components, pickupLabel = ESX.Table.Clone(weapon.components)
+        local components = ESX.Table.Clone(weapon.components)
         xPlayer.removeWeapon(itemName)
 
         if weaponObject.ammo and weapon.ammo > 0 then
