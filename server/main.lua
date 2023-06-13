@@ -79,16 +79,15 @@ function createESXPlayer(identifier, playerId, data)
     defaultGroup = "user"
   end
 
-  if not Config.Multichar then
-    MySQL.prepare(newPlayer, {json.encode(accounts), identifier, defaultGroup}, function()
-      loadESXPlayer(identifier, playerId, true)
-    end)
-  else
-    MySQL.prepare(newPlayer,
-      {json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height}, function()
+    if not Config.Multichar then
+      MySQL.prepare(newPlayer, { json.encode(accounts), identifier, defaultGroup }, function()
         loadESXPlayer(identifier, playerId, true)
       end)
-  end
+    else
+      MySQL.prepare(newPlayer, { json.encode(accounts), identifier, defaultGroup, data.firstname, data.lastname, data.dateofbirth, data.sex, data.height }, function()
+        loadESXPlayer(identifier, playerId, true)
+      end)
+    end
 end
 
 if not Config.Multichar then
