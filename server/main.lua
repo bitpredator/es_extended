@@ -465,60 +465,61 @@ if not Config.OxInventory then
     end
   end)
 
-  RegisterNetEvent('esx:removeInventoryItem')
-  AddEventHandler('esx:removeInventoryItem', function(type, itemName, itemCount)
+  RegisterServerEvent('esx:removeInventoryItem', function(type, itemName, itemCount)
     local playerId = source
     local xPlayer = ESX.GetPlayerFromId(playerId)
 
     if type == 'item_standard' then
-      if itemCount == nil or itemCount < 1 then
-        xPlayer.showNotification(_U('imp_invalid_quantity'))
-      else
-        local xItem = xPlayer.getInventoryItem(itemName)
-
-        if (itemCount > xItem.count or xItem.count < 1) then
+        if itemCount == nil or itemCount < 1 then
           xPlayer.showNotification(_U('imp_invalid_quantity'))
         else
-          xPlayer.removeInventoryItem(itemName, itemCount)
-          local pickupLabel = ('%s [%s]'):format(xItem.label, itemCount)
-          ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
-          xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
-        end
-      end
-    elseif type == 'item_account' then
-      if itemCount == nil or itemCount < 1 then
-        xPlayer.showNotification(_U('imp_invalid_amount'))
-      else
-        local account = xPlayer.getAccount(itemName)
+          local xItem = xPlayer.getInventoryItem(itemName)
 
-        if (itemCount > account.money or account.money < 1) then
+          if not xItem or itemCount > xItem.count or xItem.count < 1 then
+            xPlayer.showNotification(_U('imp_invalid_quantity'))
+          else
+            xPlayer.removeInventoryItem(itemName, itemCount)
+            local pickupLabel = ('%s [%s]'):format(xItem.label, itemCount)
+            ESX.CreatePickup('item_standard', itemName, itemCount, pickupLabel, playerId)
+            xPlayer.showNotification(_U('threw_standard', itemCount, xItem.label))
+          end
+        end
+      elseif type == 'item_account' then
+        if itemCount == nil or itemCount < 1 then
           xPlayer.showNotification(_U('imp_invalid_amount'))
         else
-          xPlayer.removeAccountMoney(itemName, itemCount, "Threw away")
-          local pickupLabel = ('%s [%s]'):format(account.label, _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
-          ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
-          xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+          local account = xPlayer.getAccount(itemName)
+
+          if not account or itemCount > account.money or account.money < 1 then
+            xPlayer.showNotification(_U('imp_invalid_amount'))
+          else
+            xPlayer.removeAccountMoney(itemName, itemCount, "Threw away")
+            local pickupLabel = ('%s [%s]'):format(account.label, _U('locale_currency', ESX.Math.GroupDigits(itemCount)))
+            ESX.CreatePickup('item_account', itemName, itemCount, pickupLabel, playerId)
+            xPlayer.showNotification(_U('threw_account', ESX.Math.GroupDigits(itemCount), string.lower(account.label)))
+          end
         end
-      end
-    elseif type == 'item_weapon' then
-      itemName = string.upper(itemName)
+      elseif type == 'item_weapon' then
+        itemName = string.upper(itemName)
 
       if xPlayer.hasWeapon(itemName) then
         local _, weapon = xPlayer.getWeapon(itemName)
-        local _, weaponObject = ESX.GetWeapon(itemName)
-        local components = ESX.Table.Clone(weapon.components)
-        xPlayer.removeWeapon(itemName)
 
-        if weaponObject.ammo and weapon.ammo > 0 then
-          local ammoLabel = weaponObject.ammo.label
-          pickupLabel = ('%s [%s %s]'):format(weapon.label, weapon.ammo, ammoLabel)
-          xPlayer.showNotification(_U('threw_weapon_ammo', weapon.label, weapon.ammo, ammoLabel))
-        else
-          pickupLabel = ('%s'):format(weapon.label)
-          xPlayer.showNotification(_U('threw_weapon', weapon.label))
-        end
+      if not weapon then return end
 
-        local pickupLabel = weaponAmmo and ('%s [%s %s]'):format(weapon.label, weapon.ammo, weaponAmmo) or ('%s'):format(weapon.label)
+      local _, weaponObject = ESX.GetWeapon(itemName)
+      local components = ESX.Table.Clone(weapon.components)
+      local weaponAmmo = false
+      xPlayer.removeWeapon(itemName)
+
+      if weaponObject.ammo and weapon.ammo > 0 then
+        weaponAmmo = weaponObject.ammo.label
+        xPlayer.showNotification(_U('threw_weapon_ammo', weapon.label, weapon.ammo, weaponAmmo))
+      else
+        xPlayer.showNotification(_U('threw_weapon', weapon.label))
+      end
+
+      local pickupLabel = weaponAmmo and ('%s [%s %s]'):format(weapon.label, weapon.ammo, weaponAmmo) or ('%s'):format(weapon.label)
 
         ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
       end
