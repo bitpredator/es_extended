@@ -518,6 +518,8 @@ if not Config.OxInventory then
           xPlayer.showNotification(_U('threw_weapon', weapon.label))
         end
 
+        local pickupLabel = weaponAmmo and ('%s [%s %s]'):format(weapon.label, weapon.ammo, weaponAmmo) or ('%s'):format(weapon.label)
+
         ESX.CreatePickup('item_weapon', itemName, weapon.ammo, pickupLabel, playerId, components, weapon.tintIndex)
       end
     end
