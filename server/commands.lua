@@ -138,49 +138,65 @@ ESX.RegisterCommand("refreshjobs", 'admin', function(xPlayer, args, showError)
 end, true, {help = _U('command_clearall')})
 
 if not Config.OxInventory then
-	ESX.RegisterCommand('clearinventory', 'admin', function(xPlayer, args, showError)
-		for _,v in ipairs(args.playerId.inventory) do
-			if v.count > 0 then
-				args.playerId.setInventoryItem(v.name, 0)
-			end
-		end
-		TriggerEvent('esx:playerInventoryCleared',args.playerId)
-	end, true, {help = _U('command_clearinventory'), validate = true, arguments = {
-		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-	}})
+    ESX.RegisterCommand('clearinventory', 'admin', function(_, args, _)
+        for _, v in ipairs(args.playerId.inventory) do
+            if v.count > 0 then
+                args.playerId.setInventoryItem(v.name, 0)
+            end
+        end
+        TriggerEvent('esx:playerInventoryCleared', args.playerId)
+    end, true, {
+        help = _U('command_clearinventory'),
+        validate = true,
+        arguments = {
+            { name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player' }
+        }
+    })
 
-	ESX.RegisterCommand('clearloadout', 'admin', function(xPlayer, args, showError)
-		for i=#args.playerId.loadout, 1, -1 do
-			args.playerId.removeWeapon(args.playerId.loadout[i].name)
-		end
-		TriggerEvent('esx:playerLoadoutCleared',args.playerId)
-	end, true, {help = _U('command_clearloadout'), validate = true, arguments = {
-		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-	}})
+    ESX.RegisterCommand('clearloadout', 'admin', function(_, args, _)
+        for i = #args.playerId.loadout, 1, -1 do
+            args.playerId.removeWeapon(args.playerId.loadout[i].name)
+        end
+        TriggerEvent('esx:playerLoadoutCleared', args.playerId)
+    end, true, {
+        help = _U('command_clearloadout'),
+        validate = true,
+        arguments = {
+            { name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player' }
+        }
+    })
 end
 
-ESX.RegisterCommand('setgroup', 'admin', function(xPlayer, args, showError)
-	if not args.playerId then args.playerId = xPlayer.source end
-	if args.group == "superadmin" then args.group = "admin" print("[^3WARNING^7] ^5Superadmin^7 detected, setting group to ^5admin^7") end
-	args.playerId.setGroup(args.group)
-end, true, {help = _U('command_setgroup'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'group', help = _U('command_setgroup_group'), type = 'string'},
-}})
+ESX.RegisterCommand("setgroup", "admin", function(xPlayer, args, _)
+    if not args.playerId then args.playerId = xPlayer.source end
 
-ESX.RegisterCommand('save', 'admin', function(xPlayer, args, showError)
-	Core.SavePlayer(args.playerId)
-	print("[^2Info^0] Saved Player - ^5".. args.playerId.source .. "^0")
-end, true, {help = _U('command_save'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'}
-}})
+    args.playerId.setGroup(args.group)
+end, true, {
+    help = _U("command_setgroup"),
+    validate = true,
+    arguments = {
+        { name = "playerId", help = _U("commandgeneric_playerid"), type = "player" },
+        { name = "group",    help = _U("command_setgroup_group"),  type = "string" },
+    }
+})
 
-ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
-	Core.SavePlayers()
-end, true, {help = _U('command_saveall')})
+ESX.RegisterCommand('save', 'admin', function(_, args, _)
+    Core.SavePlayer(args.playerId)
+    print("[^2Info^0] Saved Player - ^5" .. args.playerId.source .. "^0")
+end, true, {
+    help = _U('command_save'),
+    validate = true,
+    arguments = {
+        { name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player' }
+    }
+})
 
-ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)
-	print(xPlayer.getName()..", You are currently: ^5".. xPlayer.getGroup() .. "^0")
+ESX.RegisterCommand('saveall', 'admin', function(_, _, _)
+    Core.SavePlayers()
+end, true, { help = _U('command_saveall') })
+
+ESX.RegisterCommand('group', { "user", "admin" }, function(xPlayer, _, _)
+    print(xPlayer.getName() .. ", You are currently: ^5" .. xPlayer.getGroup() .. "^0")
 end, true)
 
 ESX.RegisterCommand('job', { "user", "admin" }, function(xPlayer, _, _)
