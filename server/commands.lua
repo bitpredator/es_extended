@@ -82,60 +82,88 @@ end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = 
 }})
 
 if not Config.OxInventory then
-	ESX.RegisterCommand('giveitem', 'admin', function(xPlayer, args, showError)
-		args.playerId.addInventoryItem(args.item, args.count)
-	end, true, {help = _U('command_giveitem'), validate = true, arguments = {
-		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-		{name = 'item', help = _U('command_giveitem_item'), type = 'item'},
-		{name = 'count', help = _U('command_giveitem_count'), type = 'number'}
-	}})
+    ESX.RegisterCommand('giveitem', 'admin', function(_, args, _)
+        args.playerId.addInventoryItem(args.item, args.count)
+    end, true, {
+        help = _U('command_giveitem'),
+        validate = true,
+        arguments = {
+            { name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player' },
+            { name = 'item',     help = _U('command_giveitem_item'),   type = 'item' },
+            { name = 'count',    help = _U('command_giveitem_count'),  type = 'number' }
+        }
+    })
 
-	ESX.RegisterCommand('giveweapon', 'admin', function(xPlayer, args, showError)
-		if args.playerId.hasWeapon(args.weapon) then
-			showError(_U('command_giveweapon_hasalready'))
-		else
-			args.playerId.addWeapon(args.weapon, args.ammo)
-		end
-	end, true, {help = _U('command_giveweapon'), validate = true, arguments = {
-		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-		{name = 'weapon', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-		{name = 'ammo', help = _U('command_giveweapon_ammo'), type = 'number'}
-	}})
+    ESX.RegisterCommand('giveweapon', 'admin', function(_, args, showError)
+        if args.playerId.hasWeapon(args.weapon) then
+            showError(_U('command_giveweapon_hasalready'))
+        else
+            args.playerId.addWeapon(args.weapon, args.ammo)
+        end
+    end, true, {
+        help = _U('command_giveweapon'),
+        validate = true,
+        arguments = {
+            { name = 'playerId', help = _U('commandgeneric_playerid'),   type = 'player' },
+            { name = 'weapon',   help = _U('command_giveweapon_weapon'), type = 'weapon' },
+            { name = 'ammo',     help = _U('command_giveweapon_ammo'),   type = 'number' }
+        }
+    })
 
-	ESX.RegisterCommand('giveweaponcomponent', 'admin', function(xPlayer, args, showError)
-		if args.playerId.hasWeapon(args.weaponName) then
-			local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
+    ESX.RegisterCommand('giveammo', 'admin', function(_, args, showError)
+        if args.playerId.hasWeapon(args.weapon) then
+            args.playerId.addWeaponAmmo(args.weapon, args.ammo)
+        else
+            showError(_U("command_giveammo_noweapon_found"))
+        end
+    end, true, {
+        help = _U('command_giveweapon'),
+        validate = false,
+        arguments = {
+            { name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player' },
+            { name = 'weapon',   help = _U('command_giveammo_weapon'), type = 'weapon' },
+            { name = 'ammo',     help = _U('command_giveammo_ammo'),   type = 'number' }
+        }
+    })
 
-			if component then
-				if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
-					showError(_U('command_giveweaponcomponent_hasalready'))
-				else
-					args.playerId.addWeaponComponent(args.weaponName, args.componentName)
-				end
-			else
-				showError(_U('command_giveweaponcomponent_invalid'))
-			end
-		else
-			showError(_U('command_giveweaponcomponent_missingweapon'))
-		end
-	end, true, {help = _U('command_giveweaponcomponent'), validate = true, arguments = {
-		{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-		{name = 'weaponName', help = _U('command_giveweapon_weapon'), type = 'weapon'},
-		{name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string'}
-	}})
+    ESX.RegisterCommand('giveweaponcomponent', 'admin', function(_, args, showError)
+        if args.playerId.hasWeapon(args.weaponName) then
+            local component = ESX.GetWeaponComponent(args.weaponName, args.componentName)
+
+            if component then
+                if args.playerId.hasWeaponComponent(args.weaponName, args.componentName) then
+                    showError(_U('command_giveweaponcomponent_hasalready'))
+                else
+                    args.playerId.addWeaponComponent(args.weaponName, args.componentName)
+                end
+            else
+                showError(_U('command_giveweaponcomponent_invalid'))
+            end
+        else
+            showError(_U('command_giveweaponcomponent_missingweapon'))
+        end
+    end, true, {
+        help = _U('command_giveweaponcomponent'),
+        validate = true,
+        arguments = {
+            { name = 'playerId',      help = _U('commandgeneric_playerid'),               type = 'player' },
+            { name = 'weaponName',    help = _U('command_giveweapon_weapon'),             type = 'weapon' },
+            { name = 'componentName', help = _U('command_giveweaponcomponent_component'), type = 'string' }
+        }
+    })
 end
 
-ESX.RegisterCommand({'clear', 'cls'}, 'user', function(xPlayer, args, showError)
-	xPlayer.triggerEvent('chat:clear')
-end, false, {help = _U('command_clear')})
+ESX.RegisterCommand({ 'clear', 'cls' }, 'user', function(xPlayer, _, _)
+    xPlayer.triggerEvent('chat:clear')
+end, false, { help = _U('command_clear') })
 
-ESX.RegisterCommand({'clearall', 'clsall'}, 'admin', function(xPlayer, args, showError)
-	TriggerClientEvent('chat:clear', -1)
-end, true, {help = _U('command_clearall')})
+ESX.RegisterCommand({ 'clearall', 'clsall' }, 'admin', function(_, _, _)
+    TriggerClientEvent('chat:clear', -1)
+end, true, { help = _U('command_clearall') })
 
-ESX.RegisterCommand("refreshjobs", 'admin', function(xPlayer, args, showError)
-	ESX.RefreshJobs()
-end, true, {help = _U('command_clearall')})
+ESX.RegisterCommand("refreshjobs", "admin", function(_, _, _)
+    ESX.RefreshJobs()
+end, true, { help = _U("command_refreshjobs") })
 
 if not Config.OxInventory then
     ESX.RegisterCommand('clearinventory', 'admin', function(_, args, _)
