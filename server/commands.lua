@@ -1,10 +1,14 @@
-ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, showError)
-	xPlayer.setCoords({x = args.x, y = args.y, z = args.z})
-end, false, {help = _U('command_setcoords'), validate = true, arguments = {
-	{name = 'x', help = _U('command_setcoords_x'), type = 'number'},
-	{name = 'y', help = _U('command_setcoords_y'), type = 'number'},
-	{name = 'z', help = _U('command_setcoords_z'), type = 'number'}
-}})
+ESX.RegisterCommand('setcoords', 'admin', function(xPlayer, args, _)
+    xPlayer.setCoords({ x = args.x, y = args.y, z = args.z })
+end, false, {
+    help = _U('command_setcoords'),
+    validate = true,
+    arguments = {
+        { name = 'x', help = _U('command_setcoords_x'), type = 'number' },
+        { name = 'y', help = _U('command_setcoords_y'), type = 'number' },
+        { name = 'z', help = _U('command_setcoords_z'), type = 'number' }
+    }
+})
 
 ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
 	if ESX.DoesJobExist(args.job, args.grade) then
@@ -18,7 +22,7 @@ end, true, {help = _U('command_setjob'), validate = true, arguments = {
 	{name = 'grade', help = _U('command_setjob_grade'), type = 'number'}
 }})
 
-ESX.RegisterCommand('car', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('car', 'admin', function(xPlayer, args, _)
 	local GameBuild = tonumber(GetConvar("sv_enforceGameBuild", 1604))
 	if not args.car then args.car = GameBuild >= 2699 and "draugur" or "prototipo" end
 	local upgrades = Config.MaxAdminVehicles and {
@@ -41,7 +45,7 @@ end, false, {help = _U('command_car'), validate = false, arguments = {
 	{name = 'car',validate = false, help = _U('command_car_car'), type = 'string'}
 }})
 
-ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand({'cardel', 'dv'}, 'admin', function(xPlayer, args, _)
 	local PedVehicle = GetVehiclePedIsIn(GetPlayerPed(xPlayer.source), false)
 	if DoesEntityExist(PedVehicle) then
 		DeleteEntity(PedVehicle)
@@ -57,29 +61,37 @@ end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius',validate = false, help = _U('command_cardel_radius'), type = 'number'}
 }})
 
-ESX.RegisterCommand('setaccountmoney', 'admin', function(xPlayer, args, showError)
-	if args.playerId.getAccount(args.account) then
-		args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
-	else
-		showError(_U('command_giveaccountmoney_invalid'))
-	end
-end, true, {help = _U('command_setaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = _U('command_giveaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = _U('command_setaccountmoney_amount'), type = 'number'}
-}})
+ESX.RegisterCommand('setaccountmoney', 'admin', function(_, args, showError)
+    if args.playerId.getAccount(args.account) then
+        args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
+    else
+        showError(_U('command_giveaccountmoney_invalid'))
+    end
+end, true, {
+    help = _U('command_setaccountmoney'),
+    validate = true,
+    arguments = {
+        { name = 'playerId', help = _U('commandgeneric_playerid'),          type = 'player' },
+        { name = 'account',  help = _U('command_giveaccountmoney_account'), type = 'string' },
+        { name = 'amount',   help = _U('command_setaccountmoney_amount'),   type = 'number' }
+    }
+})
 
-ESX.RegisterCommand('giveaccountmoney', 'admin', function(xPlayer, args, showError)
-	if args.playerId.getAccount(args.account) then
-		args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
-	else
-		showError(_U('command_giveaccountmoney_invalid'))
-	end
-end, true, {help = _U('command_giveaccountmoney'), validate = true, arguments = {
-	{name = 'playerId', help = _U('commandgeneric_playerid'), type = 'player'},
-	{name = 'account', help = _U('command_giveaccountmoney_account'), type = 'string'},
-	{name = 'amount', help = _U('command_giveaccountmoney_amount'), type = 'number'}
-}})
+ESX.RegisterCommand('giveaccountmoney', 'admin', function(_, args, showError)
+    if args.playerId.getAccount(args.account) then
+        args.playerId.addAccountMoney(args.account, args.amount, "Government Grant")
+    else
+        showError(_U('command_giveaccountmoney_invalid'))
+    end
+end, true, {
+    help = _U('command_giveaccountmoney'),
+    validate = true,
+    arguments = {
+        { name = 'playerId', help = _U('commandgeneric_playerid'),          type = 'player' },
+        { name = 'account',  help = _U('command_giveaccountmoney_account'), type = 'string' },
+        { name = 'amount',   help = _U('command_giveaccountmoney_amount'),  type = 'number' }
+    }
+})
 
 if not Config.OxInventory then
     ESX.RegisterCommand('giveitem', 'admin', function(_, args, _)
