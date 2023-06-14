@@ -10,7 +10,7 @@ end, false, {
     }
 })
 
-ESX.RegisterCommand('setjob', 'admin', function(xPlayer, args, showError)
+ESX.RegisterCommand('setjob', 'admin', function(_, args, showError)
 	if ESX.DoesJobExist(args.job, args.grade) then
 		args.playerId.setJob(args.job, args.grade)
 	else
