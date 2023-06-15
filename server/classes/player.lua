@@ -1,4 +1,3 @@
-local SetTimeout = SetTimeout
 local GetPlayerPed = GetPlayerPed
 local DoesEntityExist = DoesEntityExist
 local GetEntityCoords = GetEntityCoords
