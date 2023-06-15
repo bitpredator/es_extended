@@ -1,7 +1,5 @@
 local GetPlayerPed = GetPlayerPed
-local DoesEntityExist = DoesEntityExist
 local GetEntityCoords = GetEntityCoords
-local GetEntityHeading = GetEntityHeading
 
 function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, weight, job, loadout, name, coords, metadata)
 	local targetOverrides = Config.PlayerFunctionOverride and Core.PlayerFunctionOverrides[Config.PlayerFunctionOverride] or {}
