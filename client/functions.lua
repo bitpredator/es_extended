@@ -423,31 +423,42 @@ function ESX.Game.DeleteObject(object)
 end
 
 function ESX.Game.SpawnVehicle(vehicle, coords, heading, cb, networked)
-    local model = type(vehicle) == 'number' and vehicle or joaat(vehicle)
+    local model = type(vehicle) == "number" and vehicle or joaat(vehicle)
     local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
     networked = networked == nil and true or networked
+
+    local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+
+    if not vector or not playerCoords then return end
+
+    local dist = #(playerCoords - vector)
+    if dist > 424 then -- Onesync infinity Range (https://docs.fivem.net/docs/scripting-reference/onesync/)
+        local executingResource = GetInvokingResource() or "Unknown"
+        return print(("[^1ERROR^7] Resource ^5%s^7 Tried to spawn vehicle on the client but the position is too far away (Out of onesync range)."):format(executingResource))
+    end
+
     CreateThread(function()
         ESX.Streaming.RequestModel(model)
 
-        local vehicle = CreateVehicle(model, vector.xyz.x, vector.xyz.y, vector.xyz.z, heading, networked, true)
+        local vehicleEntity = CreateVehicle(model, vector.x, vector.y, vector.z, heading, networked, true)
 
         if networked then
-            local id = NetworkGetNetworkIdFromEntity(vehicle)
+            local id = NetworkGetNetworkIdFromEntity(vehicleEntity)
             SetNetworkIdCanMigrate(id, true)
-            SetEntityAsMissionEntity(vehicle, true, true)
+            SetEntityAsMissionEntity(vehicleEntity, true, true)
         end
-        SetVehicleHasBeenOwnedByPlayer(vehicle, true)
-        SetVehicleNeedsToBeHotwired(vehicle, false)
+        SetVehicleHasBeenOwnedByPlayer(vehicleEntity, true)
+        SetVehicleNeedsToBeHotwired(vehicleEntity, false)
         SetModelAsNoLongerNeeded(model)
-        SetVehRadioStation(vehicle, 'OFF')
+        SetVehRadioStation(vehicleEntity, "OFF")
 
-        RequestCollisionAtCoord(vector.xyz.x, vector.xyz.y, vector.xyz.z)
-        while not HasCollisionLoadedAroundEntity(vehicle) do
+        RequestCollisionAtCoord(vector.x, vector.y, vector.z)
+        while not HasCollisionLoadedAroundEntity(vehicleEntity) do
             Wait(0)
         end
 
         if cb then
-            cb(vehicle)
+            cb(vehicleEntity)
         end
     end)
 end
