@@ -35,7 +35,9 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
 	end
-
+	
+    ---Sets the current player coords
+    ---@param coords table | vector3 | vector4
     function self.setCoords(coords)
         local ped = GetPlayerPed(self.source)
         local vector = vector4(coords?.x, coords?.y, coords?.z, coords?.w or coords?.heading or 0.0)
