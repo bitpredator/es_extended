@@ -1097,19 +1097,14 @@ function ESX.ShowInventory()
         local weaponHash = joaat(v.name)
 
         if HasPedGotWeapon(playerPed, weaponHash, false) then
-            local ammo, label = GetAmmoInPedWeapon(playerPed, weaponHash)
-
-            if v.ammo then
-                label = ('%s - %s %s'):format(v.label, ammo, v.ammo.label)
-            else
-                label = v.label
-            end
+            local ammo = GetAmmoInPedWeapon(playerPed, weaponHash)
+            local label = v.ammo and ("%s - %s %s"):format(v.label, ammo, v.ammo.label) or v.label
 
             elements[#elements+1] = {
-                icon = 'fas fa-gun',
+                icon = "fas fa-gun",
                 title = label,
                 count = 1,
-                type = 'item_weapon',
+                type = "item_weapon",
                 value = v.name,
                 usable = false,
                 rare = false,
