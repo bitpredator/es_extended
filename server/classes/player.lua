@@ -35,7 +35,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 	function self.triggerEvent(eventName, ...)
 		TriggerClientEvent(eventName, self.source, ...)
 	end
-	
+
     ---Sets the current player coords
     ---@param coords table | vector3 | vector4
     function self.setCoords(coords)
@@ -541,15 +541,18 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		return false
 	end
 
-	function self.hasItem(item, metadata)
-		for _,v in ipairs(self.inventory) do
-			if (v.name == item) and (v.count >= 1) then
-				return v, v.count
-			end
-		end
+    ---Checks if the current player has the specified item
+    ---@param itemName string
+    ---@return false | table, integer | number | nil
+    function self.hasItem(itemName)
+        for _, v in ipairs(self.inventory) do
+            if (v.name == itemName) and (v.count >= 1) then
+                return v, v.count
+            end
+        end
 
-		return false
-	end
+        return false
+    end
 
 	function self.getWeapon(weaponName)
 		for k,v in ipairs(self.loadout) do
