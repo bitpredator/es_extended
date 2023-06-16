@@ -308,27 +308,50 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
         return true
     end
 
-	function self.setInventoryItem(name, count, metadata)
-		local item = self.getInventoryItem(name)
+    ---Set the specified item count for the current player
+    ---@param itemName string
+    ---@param itemCount integer | number
+    ---@return boolean
+    function self.setInventoryItem(itemName, itemCount)
+        local item = self.getInventoryItem(itemName)
+        itemCount = type(itemCount) == "number" and ESX.Math.Round(itemCount) --[[@as number]]
 
-		if item and count >= 0 then
-			count = ESX.Math.Round(count)
+        if not item or not itemCount or itemCount <= 0 then return false end
 
-			if count > item.count then
-				self.addInventoryItem(item.name, count - item.count)
-			else
-				self.removeInventoryItem(item.name, item.count - count)
-			end
-		end
-	end
+        return itemCount > item.count and self.addInventoryItem(item.name, itemCount - item.count) or self.removeInventoryItem(item.name, item.count - itemCount)
+    end
 
-	function self.getWeight()
-		return self.weight
-	end
+    ---Gets the current player inventory weight
+    ---@return integer | number
+    function self.getWeight()
+        return self.weight
+    end
 
-	function self.getMaxWeight()
-		return self.maxWeight
-	end
+    ---Gets the current player max inventory weight
+    ---@return integer | number
+    function self.getMaxWeight()
+        return self.maxWeight
+    end
+
+    ---Sets the current player max inventory weight
+    ---@param newWeight integer | number
+    function self.setMaxWeight(newWeight)
+        self.maxWeight = newWeight
+        self.triggerSafeEvent("esx:setMaxWeight", {maxWeight = newWeight}, {server = true, client = true})
+    end
+
+    ---Checks if the current player does have enough space in inventory to carry the specified item count(s)
+    ---@param itemName string
+    ---@param itemCount integer | number
+    ---@return boolean
+    function self.canCarryItem(itemName, itemCount)
+        if not ESX.Items[itemName] then print(("[^3WARNING^7] Item ^5'%s'^7 was used but does not exist!"):format(itemName)) return false end
+
+        local currentWeight, itemWeight = self.weight, ESX.Items[itemName].weight
+        local newWeight = currentWeight + (itemWeight * itemCount)
+
+        return newWeight <= self.maxWeight
+    end
 
     ---Checks if the current player does have enough space in inventory to carry the specified item count(s)
     ---@param itemName string
