@@ -265,18 +265,24 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.addInventoryItem(name, count, metadata, slot)
-		local item = self.getInventoryItem(name)
+    ---Adds the specified item to the current player
+    ---@param itemName string
+    ---@param itemCount? integer | number defaults to 1 if not provided
+    ---@return boolean
+    function self.addInventoryItem(itemName, itemCount)
+        local item = self.getInventoryItem(itemName)
 
-		if item then
-			count = ESX.Math.Round(count)
-			item.count = item.count + count
-			self.weight = self.weight + (item.weight * count)
+        if not item then return false end
 
-			TriggerEvent('esx:onAddInventoryItem', self.source, item.name, item.count)
-			self.triggerEvent('esx:addInventoryItem', item.name, item.count)
-		end
-	end
+        itemCount = type(itemCount) == "number" and ESX.Math.Round(itemCount) or 1
+        item.count += itemCount
+        self.weight += (item.weight * itemCount)
+
+        TriggerEvent("esx:onAddInventoryItem", self.source, item.name, item.count)
+        self.triggerSafeEvent("esx:addInventoryItem", {itemName = item.name, itemCount = item.count})
+
+        return true
+    end
 
 	---Removes the specified item from the current player
     ---@param itemName string
