@@ -506,14 +506,20 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.removeWeaponAmmo(weaponName, ammoCount)
-		local loadoutNum, weapon = self.getWeapon(weaponName)
+    ---Removes ammo from the current player's specified weapon
+    ---@param weaponName string
+    ---@param ammoCount integer | number
+    ---@return boolean
+    function self.removeWeaponAmmo(weaponName, ammoCount)
+        local _, weapon = self.getWeapon(weaponName)
 
-		if weapon then
-			weapon.ammo = weapon.ammo - ammoCount
-			self.triggerEvent('esx:setWeaponAmmo', weaponName, weapon.ammo)
-		end
-	end
+        if not weapon then return false end
+
+        weapon.ammo = weapon.ammo - ammoCount
+        self.updateWeaponAmmo(weaponName, weapon.ammo)
+
+        return true
+    end
 
 	---Checks if the current player has the specified component for the weapon
     ---@param weaponName any
