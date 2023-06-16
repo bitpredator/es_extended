@@ -452,15 +452,14 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.getWeaponTint(weaponName)
-		local loadoutNum, weapon = self.getWeapon(weaponName)
+    ---Gets the tint index of the current player's specified weapon
+    ---@param weaponName any
+    ---@return integer | number
+    function self.getWeaponTint(weaponName)
+        local _, weapon = self.getWeapon(weaponName)
 
-		if weapon then
-			return weapon.tintIndex
-		end
-
-		return 0
-	end
+        return weapon?.tintIndex or 0
+    end
 
 	function self.removeWeapon(weaponName)
 		local weaponLabel
