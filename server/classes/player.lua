@@ -430,13 +430,20 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.updateWeaponAmmo(weaponName, ammoCount)
-		local loadoutNum, weapon = self.getWeapon(weaponName)
+---Sets ammo to the current player's specified weapon
+    ---@param weaponName string
+    ---@param ammoCount integer | number
+    ---@return boolean
+    function self.updateWeaponAmmo(weaponName, ammoCount)
+        local _, weapon = self.getWeapon(weaponName)
 
-		if weapon then
-			weapon.ammo = ammoCount
-		end
-	end
+        if not weapon then return false end
+
+        weapon.ammo = ammoCount
+        SetPedAmmo(GetPlayerPed(self.source), joaat(weaponName), weapon.ammo)
+
+        return true
+    end
 
 	---Sets tint to the current player's specified weapon
     ---@param weaponName string
