@@ -257,13 +257,21 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.getInventoryItem(name, metadata)
-		for _,v in ipairs(self.inventory) do
-			if v.name == name then
-				return v
-			end
-		end
-	end
+    ---Gets the specified item data from the current player
+    ---@param itemName string
+    ---@return table?
+    function self.getInventoryItem(itemName)
+        local itemData
+
+        for _, item in ipairs(self.inventory) do
+            if item.name == itemName then
+                itemData = item
+                break
+            end
+        end
+
+        return itemData
+    end
 
     ---Adds the specified item to the current player
     ---@param itemName string
