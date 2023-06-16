@@ -351,43 +351,39 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:setMaxWeight', self.maxWeight)
 	end
 
-	function self.setJob(job, grade, duty)
-		if not ESX.DoesJobExist(job, grade) then print(("[^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for Player ^5%s^7, Job: ^5%s^7"):format(self.source, job)) return false end
+	---Sets job for the current player
+    ---@param job string
+    ---@param grade integer | number | string
+    ---@param duty? boolean if not provided, it will use the job's default duty value
+    ---@return boolean
+    function self.setJob(job, grade, duty)
+        if not ESX.DoesJobExist(job, grade) then print(("[^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for Player ^5%s^7, Job: ^5%s^7"):format(self.source, job)) return false end
 
-		grade = tostring(grade)
-		local lastJob = json.decode(json.encode(self.job))
-		local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+        grade = tostring(grade)
+        local lastJob = json.decode(json.encode(self.job))
+        local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
-		if ESX.DoesJobExist(job, grade) then
-			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
+        self.job.id                   = jobObject.id
+        self.job.name                 = jobObject.name
+        self.job.label                = jobObject.label
+        self.job.type                 = jobObject.type
+        self.job.duty                 = type(duty) == "boolean" and duty or jobObject.default_duty --[[@as boolean]]
+        self.job.grade                = tonumber(grade)
+        self.job.grade_name           = gradeObject.name
+        self.job.grade_label          = gradeObject.label
+        self.job.grade_salary         = gradeObject.salary
+        self.job.grade_offduty_salary = gradeObject.offduty_salary
+        self.job.skin_male            = gradeObject.skin_male and json.decode(gradeObject.skin_male) or {}     --[[@diagnostic disable-line: param-type-mismatch]]
+        self.job.skin_female          = gradeObject.skin_female and json.decode(gradeObject.skin_female) or {} --[[@diagnostic disable-line: param-type-mismatch]]
 
-			self.job.id    = jobObject.id
-			self.job.name  = jobObject.name
-			self.job.label = jobObject.label
-			self.job.grade        = tonumber(grade)
-			self.job.grade_name   = gradeObject.name
-			self.job.grade_label  = gradeObject.label
-			self.job.grade_salary = gradeObject.salary
+        self.triggerSafeEvent("esx:setJob", {currentJob = self.job, lastJob = lastJob}, {server = true, client = true})
+        Player(self.source).state:set("job", self.job, true)
 
-			if gradeObject.skin_male then
-				self.job.skin_male = json.decode(gradeObject.skin_male)
-			else
-				self.job.skin_male = {}
-			end
+        self.triggerSafeEvent("esx:setDuty", {duty = self.job.duty}, {server = true, client = true})
+        Player(self.source).state:set("duty", self.job.duty, true)
 
-			if gradeObject.skin_female then
-				self.job.skin_female = json.decode(gradeObject.skin_female)
-			else
-				self.job.skin_female = {}
-			end
-
-			TriggerEvent('esx:setJob', self.source, self.job, lastJob)
-			self.triggerEvent('esx:setJob', self.job, lastJob)
-			Player(self.source).state:set("job", self.job, true)
-		else
-			print(('[es_extended] [^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for ID: ^5%s^7, Job: ^5%s^7'):format(self.source, job))
-		end
-	end
+        return true
+    end
 
 	function self.addWeapon(weaponName, ammo)
 		if not self.hasWeapon(weaponName) then
