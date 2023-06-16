@@ -438,19 +438,26 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.setWeaponTint(weaponName, weaponTintIndex)
-		local loadoutNum, weapon = self.getWeapon(weaponName)
+	---Sets tint to the current player's specified weapon
+    ---@param weaponName string
+    ---@param weaponTintIndex integer | number
+    ---@return boolean
+    function self.setWeaponTint(weaponName, weaponTintIndex)
+        local loadoutNum, weapon = self.getWeapon(weaponName)
 
-		if weapon then
-			local weaponNum, weaponObject = ESX.GetWeapon(weaponName)
+        if not weapon then return false end
 
-			if weaponObject.tints and weaponObject.tints[weaponTintIndex] then
-				self.loadout[loadoutNum].tintIndex = weaponTintIndex
-				self.triggerEvent('esx:setWeaponTint', weaponName, weaponTintIndex)
-				self.triggerEvent('esx:addInventoryItem', weaponObject.tints[weaponTintIndex], false, true)
-			end
-		end
-	end
+        local _, weaponObject = ESX.GetWeapon(weaponName)
+
+        if not weaponObject?.tints or weaponObject?.tints?[weaponTintIndex] then return false end
+
+        self.loadout[loadoutNum].tintIndex = weaponTintIndex
+
+        self.triggerSafeEvent("esx:setWeaponTint", {weaponName = weaponName, weaponTintIndex = weaponTintIndex})
+        self.triggerSafeEvent("esx:addInventoryItem", {itemName = weaponObject.tints[weaponTintIndex], itemCount = false, showNotification = true})
+
+        return true
+    end
 
     ---Gets the tint index of the current player's specified weapon
     ---@param weaponName any
