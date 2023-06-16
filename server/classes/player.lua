@@ -63,32 +63,49 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.kick(reason)
-		DropPlayer(self.source, reason)
-	end
+    ---Kicks the current player out with the specified reason
+    ---@param reason? string
+    function self.kick(reason)
+        DropPlayer(tostring(self.source), reason --[[@as string]])
+    end
 
-	function self.setMoney(money)
-		money = ESX.Math.Round(money)
-		self.setAccountMoney('money', money)
-	end
+    ---Sets the current player money to the specified value
+    ---@param money integer | number
+    ---@return boolean
+    function self.setMoney(money)
+        money = ESX.Math.Round(money)
+        return self.setAccountMoney("money", money)
+    end
 
-	function self.getMoney()
-		return self.getAccount('money').money
-	end
+    ---Gets the current player money value
+    ---@return integer | number
+    function self.getMoney()
+        return self.getAccount("money")?.money
+    end
 
-	function self.addMoney(money, reason)
-		money = ESX.Math.Round(money)
-		self.addAccountMoney('money', money, reason)
-	end
+    ---Adds the specified value to the current player money
+    ---@param money integer | number
+    ---@param reason? string
+    ---@return boolean
+    function self.addMoney(money, reason)
+        money = ESX.Math.Round(money)
+        return self.addAccountMoney("money", money, reason)
+    end
 
-	function self.removeMoney(money, reason)
-		money = ESX.Math.Round(money)
-		self.removeAccountMoney('money', money, reason)
-	end
+    ---Removes the specified value from the current player money
+    ---@param money integer | number
+    ---@param reason? string
+    ---@return boolean
+    function self.removeMoney(money, reason)
+        money = ESX.Math.Round(money)
+        return self.removeAccountMoney("money", money, reason)
+    end
 
-	function self.getIdentifier()
-		return self.identifier
-	end
+    ---Gets the current player identifier
+    ---@return string
+    function self.getIdentifier()
+        return self.identifier
+    end
 
 	function self.setGroup(newGroup)
 		ExecuteCommand(('remove_principal identifier.%s group.%s'):format(self.license, self.group))
