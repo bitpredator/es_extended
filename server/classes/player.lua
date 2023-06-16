@@ -515,21 +515,23 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.hasWeaponComponent(weaponName, weaponComponent)
-		local loadoutNum, weapon = self.getWeapon(weaponName)
+	---Checks if the current player has the specified component for the weapon
+    ---@param weaponName any
+    ---@param weaponComponent any
+    ---@return boolean
+    function self.hasWeaponComponent(weaponName, weaponComponent)
+        local _, weapon = self.getWeapon(weaponName)
 
-		if weapon then
-			for _,v in ipairs(weapon.components) do
-				if v == weaponComponent then
-					return true
-				end
-			end
+        if weapon then
+            for _, v in ipairs(weapon.components) do
+                if v == weaponComponent then
+                    return true
+                end
+            end
+        end
 
-			return false
-		else
-			return false
-		end
-	end
+        return false
+    end
 
 	function self.hasWeapon(weaponName)
 		for _,v in ipairs(self.loadout) do
