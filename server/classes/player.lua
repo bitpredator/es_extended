@@ -234,28 +234,35 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		end
 	end
 
-	function self.removeAccountMoney(accountName, money, reason)
-		reason = reason or 'Unknown'
-		if not tonumber(money) then
-			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
-			return
-		end
-		if money > 0 then
-			local account = self.getAccount(accountName)
+	---Removes money from the specified account of the current player
+    ---@param accountName string
+    ---@param money integer | number
+    ---@param reason? string
+    ---@return boolean
+    function self.removeAccountMoney(accountName, money, reason)
+        money = tonumber(money) --[[@as number]]
+        reason = reason or "Unknown"
 
-			if account then
-				money = account.round and ESX.Math.Round(money) or money
-				self.accounts[account.index].money -= money
+        if not money or money <= 0 then
+            print(("[^1ERROR^7] Tried to remove account ^5%s^0 for Player ^5%s^0 with an invalid value -> ^5%s^7"):format(accountName, self.playerId, money))
+            return false
+        end
 
-				self.triggerEvent('esx:setAccountMoney', account)
-				TriggerEvent('esx:removeAccountMoney', self.source, accountName, money, reason)
-			else
-				print(('[^1ERROR^7] Tried To Set Add To Invalid Account ^5%s^0 For Player ^5%s^0!'):format(accountName, self.playerId))
-			end
-		else
-			print(('[^1ERROR^7] Tried To Set Account ^5%s^0 For Player ^5%s^0 To An Invalid Number -> ^5%s^7'):format(accountName, self.playerId, money))
-		end
-	end
+        local account = self.getAccount(accountName)
+
+        if not account then
+            print(("[^1ERROR^7] Tried to remove money from an invalid account ^5%s^0 for Player ^5%s^0"):format(accountName, self.playerId))
+            return false
+        end
+
+        money = account.round and ESX.Math.Round(money) or money
+        self.accounts[account.index].money = self.accounts[account.index].money - money
+
+        TriggerEvent("esx:removeAccountMoney", self.source, accountName, money, reason)
+        self.triggerSafeEvent("esx:setAccountMoney", {account = account, accountName = accountName, money = self.accounts[account.index].money, reason = reason})
+
+        return true
+    end
 
     ---Gets the specified item data from the current player
     ---@param itemName string
