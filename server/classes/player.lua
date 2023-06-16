@@ -351,9 +351,12 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 		self.triggerEvent('esx:setMaxWeight', self.maxWeight)
 	end
 
-	function self.setJob(job, grade)
+	function self.setJob(job, grade, duty)
+		if not ESX.DoesJobExist(job, grade) then print(("[^3WARNING^7] Ignoring invalid ^5.setJob()^7 usage for Player ^5%s^7, Job: ^5%s^7"):format(self.source, job)) return false end
+
 		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
+		local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 
 		if ESX.DoesJobExist(job, grade) then
 			local jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
@@ -361,7 +364,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, inventory, 
 			self.job.id    = jobObject.id
 			self.job.name  = jobObject.name
 			self.job.label = jobObject.label
-
 			self.job.grade        = tonumber(grade)
 			self.job.grade_name   = gradeObject.name
 			self.job.grade_label  = gradeObject.label
