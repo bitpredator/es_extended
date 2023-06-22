@@ -12,6 +12,7 @@ shared_scripts {
 	'locales/*.lua',
 	'config.lua',
 	'config.weapons.lua',
+	'dependencies/async/*.lua'
 }
 
 server_scripts {
