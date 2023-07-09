@@ -61,6 +61,10 @@ end, false, {help = _U('command_cardel'), validate = false, arguments = {
 	{name = 'radius',validate = false, help = _U('command_cardel_radius'), type = 'number'}
 }})
 
+ESX.RegisterCommand('repair', 'admin', function(xPlayer, args, showError)
+	xPlayer.triggerEvent("esx:repairPedVehicle")
+end, false, {help = _U('command_repair'), validate = false}) 
+
 ESX.RegisterCommand('setaccountmoney', 'admin', function(_, args, showError)
     if args.playerId.getAccount(args.account) then
         args.playerId.setAccountMoney(args.account, args.amount, "Government Grant")
