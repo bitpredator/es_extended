@@ -308,7 +308,7 @@ end, true, {
     }
 })
 
-ESX.RegisterCommand('players', "admin", function(_, _, _)
+ESX.RegisterCommand('players', "admin", function()
     local xPlayers = ESX.GetExtendedPlayers() -- Returns all xPlayers
     print("^5" .. #xPlayers .. " ^2online player(s)^0")
     for i = 1, #(xPlayers) do
