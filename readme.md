@@ -16,7 +16,7 @@ es_extended is an RPG framework for FiveM, equipped with many extra resources to
 
 - [oxmysql](https://github.com/overextended/oxmysql/releases)
 - [ox_inventory](https://github.com/overextended/ox_inventory)
-- [spawnmanager]
+- [cfx-server-data] (https://github.com/bitpredator/cfx-server-data)
 
 # Installation
 
